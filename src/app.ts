@@ -18,33 +18,6 @@ export type Game = {
 
 type Comparator = (a: number, b: number) => boolean
 
-function configureComputerStrategy(ai_level: string) {
-  let score = 0
-  let compare: Comparator = (a, b) => a > b
-  switch (ai_level) {
-    case 'hard':
-      score = Number.NEGATIVE_INFINITY
-      compare = (a, b) => a > b
-      break
-    case 'easy':
-      score = Number.POSITIVE_INFINITY
-      compare = (a, b) => a < b
-      break
-    case 'normal': {
-      const guess = Math.random() * 100
-      if (guess <= 40) {
-        score = Number.POSITIVE_INFINITY
-        compare = (a, b) => a < b
-      } else {
-        score = Number.NEGATIVE_INFINITY
-        compare = (a, b) => a > b
-      }
-      break
-    }
-  }
-  return { score, compare }
-}
-
 export function createGame(
   play_board: ('X' | 'O' | '')[] = ['', '', '', '', '', '', '', '', ''],
 ): Game {
@@ -124,7 +97,29 @@ export function createGame(
 
   const addComputerMove = (ai_level: string) => {
     if (!board_full) {
-      let { score, compare } = configureComputerStrategy(ai_level)
+      let score = 0
+      let compare: Comparator = (a, b) => a > b
+      switch (ai_level) {
+        case 'hard':
+          score = Number.NEGATIVE_INFINITY
+          compare = (a, b) => a > b
+          break
+        case 'easy':
+          score = Number.POSITIVE_INFINITY
+          compare = (a, b) => a < b
+          break
+        case 'normal': {
+          const guess = Math.random() * 100
+          if (guess <= 40) {
+            score = Number.POSITIVE_INFINITY
+            compare = (a, b) => a < b
+          } else {
+            score = Number.NEGATIVE_INFINITY
+            compare = (a, b) => a > b
+          }
+          break
+        }
+      }
       let nextMove = 0
       for (let i = 0; i < play_board.length; i++) {
         if (play_board[i] === '') {
@@ -330,6 +325,7 @@ export function createGame(
     const aiLevel = document.querySelector('#ai_level') as HTMLSelectElement
     aiLevel.disabled = false
 
+    const audio = document.querySelector('audio')
     render_board()
     randomizeStart()
 
