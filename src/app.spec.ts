@@ -1,22 +1,16 @@
-/**
+import {screen, within} from '@testing-library/dom' /**
  * @vitest-environment jsdom
  */
-import { JSDOM } from 'jsdom'
-import { describe, it, expect } from 'vitest'
+import {describe, expect, it} from 'vitest'
+import {render} from '../test/dom.ts'
 
-describe('the tic tac toe integration test', async () => {
-  const createVirtualDOM = async () => {
-    const dom = await JSDOM.fromFile('index.html', {
-      runScripts: 'dangerously',
-    })
-    const domAsText = dom.serialize()
-    const body = domAsText.match(/<body>([\s\S]*)<\/body>/)[1]
-    global.document.body.innerHTML = body
-  }
-
+describe('the tic tac toe integration test', () => {
   it('loads the body of the html', async () => {
-    await createVirtualDOM()
-    const winnerElement = document.getElementById('winner')
-    expect(winnerElement).not.toBe(null)
+    const dom = await render()
+    const { getByTestId } = within(dom.window.document.body)
+    screen.debug(dom.window.document.body)
+
+    const winnerElement = getByTestId('winner')
+    expect(winnerElement).toBeInTheDocument()
   })
 })
