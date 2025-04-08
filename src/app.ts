@@ -1,6 +1,5 @@
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
-import type {Cell} from './board.ts'
 import {Board} from './board.ts'
 import {View} from './view.ts'
 
@@ -11,7 +10,7 @@ export type Game = {
   game_loop: () => void
   randomizeStart: () => void
   addComputerMove: (ai_level: string) => void
-  minimax: (board: Cell[], isMaximizing: boolean) => number
+  minimax: (board: Board, isMaximizing: boolean) => number
   checkWinner: () => void
   check_match: () => string
   reset_board: () => void
@@ -119,7 +118,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       ) {
         if (gameBoard.isMoveAvailableIn(cellPosition)) {
           gameBoard.addComputerMoveIn(cellPosition)
-          const endScore = minimax(gameBoard.cells, false)
+          const endScore = minimax(gameBoard, false)
           gameBoard.removeMoveIn(cellPosition)
           if (compare(endScore, score)) {
             score = endScore
@@ -146,18 +145,22 @@ export function createGame(gameBoard: Board = new Board()): Game {
     return ''
   }
 
-  const minimax = (board: Cell[], isMaximizing: boolean) => {
+  const minimax = (board: Board, isMaximizing: boolean) => {
     const res = check_match()
     if (res !== '') {
       return scores[res]
     }
     if (isMaximizing) {
       let bestScore = Number.NEGATIVE_INFINITY
-      for (let cellPosition = 0; cellPosition < board.length; cellPosition++) {
-        if (gameBoard.isMoveAvailableIn(cellPosition)) {
-          gameBoard.addComputerMoveIn(cellPosition)
+      for (
+        let cellPosition = 0;
+        cellPosition < board.cells.length;
+        cellPosition++
+      ) {
+        if (board.isMoveAvailableIn(cellPosition)) {
+          board.addComputerMoveIn(cellPosition)
           const score = minimax(board, false)
-          gameBoard.removeMoveIn(cellPosition)
+          board.removeMoveIn(cellPosition)
           bestScore = Math.max(score, bestScore)
         }
       }
@@ -165,11 +168,15 @@ export function createGame(gameBoard: Board = new Board()): Game {
       // biome-ignore lint/style/noUselessElse: why not
     } else {
       let bestScore = Number.POSITIVE_INFINITY
-      for (let cellPosition = 0; cellPosition < board.length; cellPosition++) {
-        if (gameBoard.isMoveAvailableIn(cellPosition)) {
-          gameBoard.addPlayerMoveIn(cellPosition)
+      for (
+        let cellPosition = 0;
+        cellPosition < board.cells.length;
+        cellPosition++
+      ) {
+        if (board.isMoveAvailableIn(cellPosition)) {
+          board.addPlayerMoveIn(cellPosition)
           const score = minimax(board, true)
-          gameBoard.removeMoveIn(cellPosition)
+          board.removeMoveIn(cellPosition)
           bestScore = Math.min(score, bestScore)
         }
       }
