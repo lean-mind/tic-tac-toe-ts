@@ -29,10 +29,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   const game = {} as Game
 
-  const render_board = () => {
+  game.render_board = () => {
     View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
   }
-  game.render_board = render_board
 
   const configure_ai = () => {
     const ai_select = document.querySelector('#ai_level') as HTMLSelectElement
@@ -46,7 +45,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   }
 
   game.start = () => {
-    render_board()
+    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
     configure_ai()
   }
 
@@ -56,7 +55,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   game.checkBoardComplete = checkBoardComplete
 
   const game_loop = () => {
-    render_board()
+    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
     checkBoardComplete()
     checkWinner()
   }
@@ -320,7 +319,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     aiLevel.disabled = false
 
     const audio = document.querySelector('audio')
-    render_board()
+    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
     randomizeStart()
 
     const mute_sound_btn = document.getElementsByClassName('btn-sound')[0]
