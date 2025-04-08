@@ -1,5 +1,6 @@
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
+import {Board} from './board.ts'
 
 export type Game = {
   render_board: () => void
@@ -18,11 +19,10 @@ export type Game = {
 
 type Comparator = (a: number, b: number) => boolean
 
-export function createGame(
-  play_board: ('X' | 'O' | '')[] = ['', '', '', '', '', '', '', '', ''],
-): Game {
+export function createGame(gameBoard: Board = new Board()): Game {
   const player = 'O'
   const computer = 'X'
+  let board = gameBoard.cells
   let board_full = false
   let ai_level = ''
 
@@ -31,8 +31,8 @@ export function createGame(
   const render_board = () => {
     const board_container = document.querySelector('.play-area') as HTMLElement
     board_container.innerHTML = ''
-    play_board.forEach((e, i) => {
-      board_container.innerHTML += `<div id="block_${i}" class="block" onclick="addPlayerMove(${i})">${play_board[i]}</div>`
+    board.forEach((e, i) => {
+      board_container.innerHTML += `<div id="block_${i}" class="block" onclick="addPlayerMove(${i})">${board[i]}</div>`
       if (e === player || e === computer) {
         document.querySelector(`#block_${i}`)?.classList.add('occupied')
       }
@@ -57,7 +57,7 @@ export function createGame(
   }
 
   const checkBoardComplete = () => {
-    board_full = play_board.every((item) => item !== '')
+    board_full = board.every((item) => item !== '')
   }
   game.checkBoardComplete = checkBoardComplete
 
@@ -69,7 +69,7 @@ export function createGame(
   game.game_loop = game_loop
 
   const randomizeStart = () => {
-    if (play_board.every((item) => item === '')) {
+    if (board.every((item) => item === '')) {
       // const PLAYER = 0;
       const COMPUTER = 1
       const start = Math.round(Math.random())
@@ -84,12 +84,12 @@ export function createGame(
   game.randomizeStart = randomizeStart
 
   window.addPlayerMove = (e) => {
-    if (play_board[e] === '' && !board_full) {
+    if (board[e] === '' && !board_full) {
       const querySelector = document.querySelector(
         '#ai_level',
       ) as HTMLSelectElement
       querySelector.disabled = true
-      play_board[e] = player
+      board[e] = player
       game_loop()
       addComputerMove(ai_level)
     }
@@ -121,18 +121,18 @@ export function createGame(
         }
       }
       let nextMove = 0
-      for (let i = 0; i < play_board.length; i++) {
-        if (play_board[i] === '') {
-          play_board[i] = computer
-          const endScore = minimax(play_board, false)
-          play_board[i] = ''
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] === '') {
+          board[i] = computer
+          const endScore = minimax(board, false)
+          board[i] = ''
           if (compare(endScore, score)) {
             score = endScore
             nextMove = i
           }
         }
       }
-      play_board[nextMove] = computer
+      board[nextMove] = computer
       game_loop()
     }
   }
@@ -143,19 +143,19 @@ export function createGame(
   const check_match = (): 'X' | 'O' | 'tie' | '' => {
     for (let i = 0; i < 9; i += 3) {
       if (check_line(i, i + 1, i + 2)) {
-        return play_board[i]
+        return board[i]
       }
     }
     for (let i = 0; i < 3; i++) {
       if (check_line(i, i + 3, i + 6)) {
-        return play_board[i]
+        return board[i]
       }
     }
     if (check_line(0, 4, 8)) {
-      return play_board[0]
+      return board[0]
     }
     if (check_line(2, 4, 6)) {
-      return play_board[2]
+      return board[2]
     }
     checkBoardComplete()
     if (board_full) return 'tie'
@@ -299,9 +299,9 @@ export function createGame(
 
   const check_line = (a: number, b: number, c: number) => {
     const status =
-      play_board[a] === play_board[b] &&
-      play_board[b] === play_board[c] &&
-      (play_board[a] === player || play_board[a] === computer)
+      board[a] === board[b] &&
+      board[b] === board[c] &&
+      (board[a] === player || board[a] === computer)
     if (status) {
       // TODO Uncomment lines below and add unit test for this code
       // document.getElementById(`block_${a}`).classList.add("won");
@@ -316,7 +316,7 @@ export function createGame(
 
   const reset_board = () => {
     const winner_statement = document.getElementById('winner') as HTMLElement
-    play_board = ['', '', '', '', '', '', '', '', '']
+    board = ['', '', '', '', '', '', '', '', '']
     board_full = false
     winner_statement.classList.remove('playerWin')
     winner_statement.classList.remove('computerWin')
