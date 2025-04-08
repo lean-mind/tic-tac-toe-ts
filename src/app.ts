@@ -1,5 +1,6 @@
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
+import type {Cell} from './board.ts'
 import {Board} from './board.ts'
 import {View} from './view.ts'
 
@@ -10,7 +11,7 @@ export type Game = {
   game_loop: () => void
   randomizeStart: () => void
   addComputerMove: (ai_level: string) => void
-  minimax: (board: string[], isMaximizing: boolean) => number
+  minimax: (board: Cell[], isMaximizing: boolean) => number
   checkWinner: () => void
   check_match: () => string
   reset_board: () => void
@@ -145,7 +146,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     return ''
   }
 
-  const minimax = (board: string[], isMaximizing: boolean) => {
+  const minimax = (board: Cell[], isMaximizing: boolean) => {
     const res = check_match()
     if (res !== '') {
       return scores[res]
@@ -279,22 +280,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
   }
   game.muteAudio = muteAudio
-
-  const check_line = (a: number, b: number, c: number) => {
-    const status =
-      gameBoard.cells[a] === gameBoard.cells[b] &&
-      gameBoard.cells[b] === gameBoard.cells[c] &&
-      (gameBoard.cells[a] === player || gameBoard.cells[a] === computer)
-    if (status) {
-      // TODO Uncomment lines below and add unit test for this code
-      // document.getElementById(`block_${a}`).classList.add("won");
-      // document.getElementById(`block_${b}`).classList.add("won");
-      // document.getElementById(`block_${c}`).classList.add("won");
-    }
-    return status
-  }
-  game.check_line = check_line
-
   game.check_match = check_match
 
   const reset_board = () => {
