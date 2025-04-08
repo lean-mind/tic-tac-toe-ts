@@ -2,10 +2,6 @@ import {describe, expect, it} from 'vitest'
 import {Board} from './board'
 
 describe('Board should', () => {
-  it('be created empty', () => {
-    const board = new Board()
-    expect(board.cells).toEqual(['', '', '', '', '', '', '', '', ''])
-  })
   it('knows is empty', () => {
     const board = new Board()
     expect(board.isEmpty()).toBe(true)
@@ -74,5 +70,16 @@ describe('Board should', () => {
     board.addComputerMoveIn(2)
 
     expect(board.computerCompletesAnyLine()).toBe(true)
+  })
+  it('retrieve next available cell position', () => {
+    const board = new Board()
+    board.addPlayerMoveIn(0)
+    board.addComputerMoveIn(1)
+    board.addComputerMoveIn(2)
+    board.addPlayerMoveIn(3)
+    board.addComputerMoveIn(4)
+    board.addPlayerMoveIn(5)
+
+    expect(board.availableCellPositions().next().value).toEqual(6)
   })
 })

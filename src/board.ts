@@ -77,4 +77,12 @@ export class Board {
       combination.every((index) => this._cells[index] === move),
     )
   }
+
+  *availableCellPositions(): Generator<number> {
+    for (let i = 0; i < this._cells.length; i++) {
+      if (this._cells[i] === '') {
+        yield i
+      }
+    }
+  }
 }

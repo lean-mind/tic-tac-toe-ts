@@ -111,19 +111,13 @@ export function createGame(gameBoard: Board = new Board()): Game {
         }
       }
       let nextMove = 0
-      for (
-        let cellPosition = 0;
-        cellPosition < gameBoard.cells.length;
-        cellPosition++
-      ) {
-        if (gameBoard.isMoveAvailableIn(cellPosition)) {
-          gameBoard.addComputerMoveIn(cellPosition)
-          const endScore = minimax(gameBoard, false)
-          gameBoard.removeMoveIn(cellPosition)
-          if (compare(endScore, score)) {
-            score = endScore
-            nextMove = cellPosition
-          }
+      for (const availableCellPosition of gameBoard.availableCellPositions()) {
+        gameBoard.addComputerMoveIn(availableCellPosition)
+        const endScore = minimax(gameBoard, false)
+        gameBoard.removeMoveIn(availableCellPosition)
+        if (compare(endScore, score)) {
+          score = endScore
+          nextMove = availableCellPosition
         }
       }
       gameBoard.addComputerMoveIn(nextMove)
@@ -152,33 +146,21 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
     if (isMaximizing) {
       let bestScore = Number.NEGATIVE_INFINITY
-      for (
-        let cellPosition = 0;
-        cellPosition < board.cells.length;
-        cellPosition++
-      ) {
-        if (board.isMoveAvailableIn(cellPosition)) {
-          board.addComputerMoveIn(cellPosition)
-          const score = minimax(board, false)
-          board.removeMoveIn(cellPosition)
-          bestScore = Math.max(score, bestScore)
-        }
+      for (const availableCellPosition of board.availableCellPositions()) {
+        board.addComputerMoveIn(availableCellPosition)
+        const score = minimax(board, false)
+        board.removeMoveIn(availableCellPosition)
+        bestScore = Math.max(score, bestScore)
       }
       return bestScore
       // biome-ignore lint/style/noUselessElse: why not
     } else {
       let bestScore = Number.POSITIVE_INFINITY
-      for (
-        let cellPosition = 0;
-        cellPosition < board.cells.length;
-        cellPosition++
-      ) {
-        if (board.isMoveAvailableIn(cellPosition)) {
-          board.addPlayerMoveIn(cellPosition)
-          const score = minimax(board, true)
-          board.removeMoveIn(cellPosition)
-          bestScore = Math.min(score, bestScore)
-        }
+      for (const availableCellPosition of board.availableCellPositions()) {
+        board.addPlayerMoveIn(availableCellPosition)
+        const score = minimax(board, true)
+        board.removeMoveIn(availableCellPosition)
+        bestScore = Math.min(score, bestScore)
       }
       return bestScore
     }
