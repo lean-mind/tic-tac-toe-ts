@@ -62,7 +62,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   game.game_loop = game_loop
 
   const randomizeStart = () => {
-    if (board.every((item) => item === '')) {
+    if (gameBoard.isEmpty()) {
       // const PLAYER = 0;
       const COMPUTER = 1
       const start = Math.round(Math.random())

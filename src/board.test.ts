@@ -6,4 +6,9 @@ describe('Board should', () => {
     const board = new Board()
     expect(board.cells).toEqual(['', '', '', '', '', '', '', '', ''])
   })
+
+  it('knows is empty', () => {
+    const board = new Board()
+    expect(board.isEmpty()).toBe(true)
+  })
 })

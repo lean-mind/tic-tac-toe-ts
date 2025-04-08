@@ -12,4 +12,8 @@ export class Board {
   get cells(): Cell[] {
     return this._cells
   }
+
+  isEmpty(): boolean {
+    return this._cells.every((cell) => cell === '')
+  }
 }
