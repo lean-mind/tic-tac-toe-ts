@@ -76,13 +76,13 @@ export function createGame(gameBoard: Board = new Board()): Game {
   }
   game.randomizeStart = randomizeStart
 
-  window.addPlayerMove = (e) => {
-    if (gameBoard.isMoveAvailableIn(e) && !board_full) {
+  window.addPlayerMove = (cellPosition) => {
+    if (gameBoard.isMoveAvailableIn(cellPosition) && !board_full) {
       const querySelector = document.querySelector(
         '#ai_level',
       ) as HTMLSelectElement
       querySelector.disabled = true
-      board[e] = player
+      gameBoard.addPlayerMoveIn(cellPosition)
       game_loop()
       addComputerMove(ai_level)
     }
@@ -114,18 +114,18 @@ export function createGame(gameBoard: Board = new Board()): Game {
         }
       }
       let nextMove = 0
-      for (let i = 0; i < board.length; i++) {
-        if (gameBoard.isMoveAvailableIn(i)) {
-          board[i] = computer
+      for (let cellPosition = 0; cellPosition < board.length; cellPosition++) {
+        if (gameBoard.isMoveAvailableIn(cellPosition)) {
+          gameBoard.addComputerMoveIn(cellPosition)
           const endScore = minimax(board, false)
-          board[i] = ''
+          gameBoard.removeMoveIn(cellPosition)
           if (compare(endScore, score)) {
             score = endScore
-            nextMove = i
+            nextMove = cellPosition
           }
         }
       }
-      board[nextMove] = computer
+      gameBoard.addComputerMoveIn(nextMove)
       game_loop()
     }
   }
@@ -162,11 +162,11 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
     if (isMaximizing) {
       let bestScore = Number.NEGATIVE_INFINITY
-      for (let i = 0; i < board.length; i++) {
-        if (gameBoard.isMoveAvailableIn(i)) {
-          board[i] = computer
+      for (let cellPosition = 0; cellPosition < board.length; cellPosition++) {
+        if (gameBoard.isMoveAvailableIn(cellPosition)) {
+          gameBoard.addComputerMoveIn(cellPosition)
           const score = minimax(board, false)
-          board[i] = ''
+          gameBoard.removeMoveIn(cellPosition)
           bestScore = Math.max(score, bestScore)
         }
       }
@@ -174,11 +174,11 @@ export function createGame(gameBoard: Board = new Board()): Game {
       // biome-ignore lint/style/noUselessElse: why not
     } else {
       let bestScore = Number.POSITIVE_INFINITY
-      for (let i = 0; i < board.length; i++) {
-        if (gameBoard.isMoveAvailableIn(i)) {
-          board[i] = player
+      for (let cellPosition = 0; cellPosition < board.length; cellPosition++) {
+        if (gameBoard.isMoveAvailableIn(cellPosition)) {
+          gameBoard.addPlayerMoveIn(cellPosition)
           const score = minimax(board, true)
-          board[i] = ''
+          gameBoard.removeMoveIn(cellPosition)
           bestScore = Math.min(score, bestScore)
         }
       }
