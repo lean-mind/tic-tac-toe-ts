@@ -24,4 +24,13 @@ describe('View should', () => {
     expect(playArea.children[7].textContent).toBe('')
     expect(playArea.children[8].textContent).toBe('')
   })
+  it('deactivate select', async () => {
+    const { body } = await render()
+    const { getByTestId } = within(body)
+    const aiSelect = getByTestId('ai_level') as HTMLSelectElement
+
+    View.deactivateSelect(aiSelect)
+
+    expect(aiSelect.disabled).toBe(true)
+  })
 })

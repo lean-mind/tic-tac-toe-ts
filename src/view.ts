@@ -11,4 +11,7 @@ export class View {
       }
     })
   }
+  static deactivateSelect(element: HTMLSelectElement) {
+    element.disabled = true
+  }
 }

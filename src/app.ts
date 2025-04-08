@@ -54,10 +54,10 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   window.addPlayerMove = (cellPosition) => {
     if (gameBoard.isMoveAvailableIn(cellPosition) && !gameFinished) {
-      const querySelector = document.querySelector(
+      const dificultySelector = document.querySelector(
         '#ai_level',
       ) as HTMLSelectElement
-      querySelector.disabled = true
+      View.deactivateSelect(dificultySelector)
       gameBoard.addPlayerMoveIn(cellPosition)
       game_loop()
       addComputerMove(ai_level)
