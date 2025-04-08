@@ -59,4 +59,20 @@ describe('Board should', () => {
 
     expect(board.isEmpty()).toBe(true)
   })
+  it('knows when player completes any line', () => {
+    const board = new Board()
+    board.addPlayerMoveIn(0)
+    board.addPlayerMoveIn(1)
+    board.addPlayerMoveIn(2)
+
+    expect(board.playerCompletesAnyLine()).toBe(true)
+  })
+  it('knows when computer completes any line', () => {
+    const board = new Board()
+    board.addComputerMoveIn(0)
+    board.addComputerMoveIn(1)
+    board.addComputerMoveIn(2)
+
+    expect(board.computerCompletesAnyLine()).toBe(true)
+  })
 })

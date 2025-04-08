@@ -12,7 +12,6 @@ export type Game = {
   addComputerMove: (ai_level: string) => void
   minimax: (board: string[], isMaximizing: boolean) => number
   checkWinner: () => void
-  check_line: (a: number, b: number, c: number) => boolean
   check_match: () => string
   reset_board: () => void
   muteAudio: () => void
@@ -136,21 +135,11 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const scores = { X: 1, O: -1, tie: 0 }
 
   const check_match = (): 'X' | 'O' | 'tie' | '' => {
-    for (let i = 0; i < 9; i += 3) {
-      if (check_line(i, i + 1, i + 2)) {
-        return gameBoard.cells[i]
-      }
+    if (gameBoard.playerCompletesAnyLine()) {
+      return player
     }
-    for (let i = 0; i < 3; i++) {
-      if (check_line(i, i + 3, i + 6)) {
-        return gameBoard.cells[i]
-      }
-    }
-    if (check_line(0, 4, 8)) {
-      return gameBoard.cells[0]
-    }
-    if (check_line(2, 4, 6)) {
-      return gameBoard.cells[2]
+    if (gameBoard.computerCompletesAnyLine()) {
+      return computer
     }
     if (gameBoard.isFull()) return 'tie'
     return ''

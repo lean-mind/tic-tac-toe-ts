@@ -44,4 +44,37 @@ export class Board {
   reset() {
     this._cells = ['', '', '', '', '', '', '', '', '']
   }
+
+  playerCompletesAnyLine(): boolean {
+    return this.anyLineIsCompletedFor('O')
+  }
+
+  computerCompletesAnyLine(): boolean {
+    return this.anyLineIsCompletedFor('X')
+  }
+
+  private anyLineIsCompletedFor(move: Player | Computer): boolean {
+    const horizonatalWinningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+    ]
+    const verticalWinningCombinations = [
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+    ]
+    const diagonalWinningCombinations = [
+      [0, 4, 8],
+      [2, 4, 6],
+    ]
+    const winningCombinations = [
+      ...horizonatalWinningCombinations,
+      ...verticalWinningCombinations,
+      ...diagonalWinningCombinations,
+    ]
+    return winningCombinations.some((combination) =>
+      combination.every((index) => this._cells[index] === move),
+    )
+  }
 }
