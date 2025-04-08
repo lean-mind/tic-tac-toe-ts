@@ -5,7 +5,7 @@ import {View} from './view.ts'
 
 export type Game = {
   start: () => void
-  reset_board: () => void
+  resetBoard: () => void
 }
 
 type Comparator = (a: number, b: number) => boolean
@@ -15,8 +15,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const computer = 'X'
   let gameFinished = false
   let ai_level = ''
-
-  const game = {} as Game
 
   const configure_ai = () => {
     const ai_select = document.querySelector('#ai_level') as HTMLSelectElement
@@ -29,7 +27,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     })
   }
 
-  game.start = () => {
+  const start = () => {
     View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
     configure_ai()
   }
@@ -247,7 +245,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
   }
 
-  game.reset_board = () => {
+  const resetBoard = () => {
     const winner_statement = document.getElementById('winner') as HTMLElement
     gameBoard.reset()
     gameFinished = false
@@ -267,5 +265,5 @@ export function createGame(gameBoard: Board = new Board()): Game {
       mute_sound_btn.parentNode.removeChild(mute_sound_btn) //delete the button when resetting the board
   }
 
-  return game
+  return { start, resetBoard }
 }
