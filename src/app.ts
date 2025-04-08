@@ -1,7 +1,7 @@
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {Board} from './board.ts'
-import {View} from "./view.ts";
+import {View} from './view.ts'
 
 export type Game = {
   render_board: () => void
@@ -77,7 +77,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   game.randomizeStart = randomizeStart
 
   window.addPlayerMove = (e) => {
-    if (board[e] === '' && !board_full) {
+    if (gameBoard.isMoveAvailableIn(e) && !board_full) {
       const querySelector = document.querySelector(
         '#ai_level',
       ) as HTMLSelectElement
@@ -115,7 +115,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       }
       let nextMove = 0
       for (let i = 0; i < board.length; i++) {
-        if (board[i] === '') {
+        if (gameBoard.isMoveAvailableIn(i)) {
           board[i] = computer
           const endScore = minimax(board, false)
           board[i] = ''
@@ -163,7 +163,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     if (isMaximizing) {
       let bestScore = Number.NEGATIVE_INFINITY
       for (let i = 0; i < board.length; i++) {
-        if (board[i] === '') {
+        if (gameBoard.isMoveAvailableIn(i)) {
           board[i] = computer
           const score = minimax(board, false)
           board[i] = ''
@@ -175,7 +175,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     } else {
       let bestScore = Number.POSITIVE_INFINITY
       for (let i = 0; i < board.length; i++) {
-        if (board[i] === '') {
+        if (gameBoard.isMoveAvailableIn(i)) {
           board[i] = player
           const score = minimax(board, true)
           board[i] = ''
