@@ -3,7 +3,7 @@ export type Computer = 'X'
 export type Cell = Computer | Player | ''
 
 export class Board {
-  private readonly _cells: Cell[]
+  private _cells: Cell[]
 
   constructor() {
     this._cells = ['', '', '', '', '', '', '', '', '']
@@ -39,5 +39,9 @@ export class Board {
 
   removeMoveIn(cellPosition: number): void {
     this._cells[cellPosition] = ''
+  }
+
+  reset() {
+    this._cells = ['', '', '', '', '', '', '', '', '']
   }
 }

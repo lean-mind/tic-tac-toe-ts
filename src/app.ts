@@ -23,7 +23,6 @@ type Comparator = (a: number, b: number) => boolean
 export function createGame(gameBoard: Board = new Board()): Game {
   const player = 'O'
   const computer = 'X'
-  let board = gameBoard.cells
   let gameFinished = false
   let ai_level = ''
 
@@ -113,10 +112,14 @@ export function createGame(gameBoard: Board = new Board()): Game {
         }
       }
       let nextMove = 0
-      for (let cellPosition = 0; cellPosition < board.length; cellPosition++) {
+      for (
+        let cellPosition = 0;
+        cellPosition < gameBoard.cells.length;
+        cellPosition++
+      ) {
         if (gameBoard.isMoveAvailableIn(cellPosition)) {
           gameBoard.addComputerMoveIn(cellPosition)
-          const endScore = minimax(board, false)
+          const endScore = minimax(gameBoard.cells, false)
           gameBoard.removeMoveIn(cellPosition)
           if (compare(endScore, score)) {
             score = endScore
@@ -135,19 +138,19 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const check_match = (): 'X' | 'O' | 'tie' | '' => {
     for (let i = 0; i < 9; i += 3) {
       if (check_line(i, i + 1, i + 2)) {
-        return board[i]
+        return gameBoard.cells[i]
       }
     }
     for (let i = 0; i < 3; i++) {
       if (check_line(i, i + 3, i + 6)) {
-        return board[i]
+        return gameBoard.cells[i]
       }
     }
     if (check_line(0, 4, 8)) {
-      return board[0]
+      return gameBoard.cells[0]
     }
     if (check_line(2, 4, 6)) {
-      return board[2]
+      return gameBoard.cells[2]
     }
     if (gameBoard.isFull()) return 'tie'
     return ''
@@ -290,9 +293,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   const check_line = (a: number, b: number, c: number) => {
     const status =
-      board[a] === board[b] &&
-      board[b] === board[c] &&
-      (board[a] === player || board[a] === computer)
+      gameBoard.cells[a] === gameBoard.cells[b] &&
+      gameBoard.cells[b] === gameBoard.cells[c] &&
+      (gameBoard.cells[a] === player || gameBoard.cells[a] === computer)
     if (status) {
       // TODO Uncomment lines below and add unit test for this code
       // document.getElementById(`block_${a}`).classList.add("won");
@@ -307,7 +310,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   const reset_board = () => {
     const winner_statement = document.getElementById('winner') as HTMLElement
-    board = ['', '', '', '', '', '', '', '', '']
+    gameBoard.reset()
     gameFinished = false
     winner_statement.classList.remove('playerWin')
     winner_statement.classList.remove('computerWin')
@@ -316,9 +319,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
     const aiLevel = document.querySelector('#ai_level') as HTMLSelectElement
     aiLevel.disabled = false
 
-    const audio = document.querySelector('audio')
     View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
     randomizeStart()
+    document.querySelector('.play-area')
 
     const mute_sound_btn = document.getElementsByClassName('btn-sound')[0]
     if (mute_sound_btn?.parentNode != null)

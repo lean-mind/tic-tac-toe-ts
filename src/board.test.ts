@@ -50,4 +50,13 @@ describe('Board should', () => {
     expect(board.cells[0]).toBe('')
     expect(board.cells[1]).toBe('X')
   })
+  it('be reset', () => {
+    const board = new Board()
+    board.addPlayerMoveIn(0)
+    board.addComputerMoveIn(1)
+
+    board.reset()
+
+    expect(board.isEmpty()).toBe(true)
+  })
 })
