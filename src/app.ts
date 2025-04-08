@@ -4,17 +4,8 @@ import {Board} from './board.ts'
 import {View} from './view.ts'
 
 export type Game = {
-  render_board: () => void
   start: () => void
-  checkBoardComplete: () => void
-  game_loop: () => void
-  randomizeStart: () => void
-  addComputerMove: (ai_level: string) => void
-  minimax: (board: Board, isMaximizing: boolean) => number
-  checkWinner: () => void
-  check_match: () => string
   reset_board: () => void
-  muteAudio: () => void
 }
 
 type Comparator = (a: number, b: number) => boolean
@@ -26,10 +17,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
   let ai_level = ''
 
   const game = {} as Game
-
-  game.render_board = () => {
-    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
-  }
 
   const configure_ai = () => {
     const ai_select = document.querySelector('#ai_level') as HTMLSelectElement
@@ -47,16 +34,11 @@ export function createGame(gameBoard: Board = new Board()): Game {
     configure_ai()
   }
 
-  game.checkBoardComplete = () => {
-    gameFinished = gameBoard.isFull()
-  }
-
   const game_loop = () => {
     View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
     gameFinished = gameBoard.isFull()
     checkWinner()
   }
-  game.game_loop = game_loop
 
   const randomizeStart = () => {
     if (gameBoard.isEmpty()) {
@@ -71,7 +53,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
       }
     }
   }
-  game.randomizeStart = randomizeStart
 
   window.addPlayerMove = (cellPosition) => {
     if (gameBoard.isMoveAvailableIn(cellPosition) && !gameFinished) {
@@ -124,7 +105,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
       game_loop()
     }
   }
-  game.addComputerMove = addComputerMove
 
   const scores = { X: 1, O: -1, tie: 0 }
 
@@ -165,7 +145,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
       return bestScore
     }
   }
-  game.minimax = minimax
 
   let temp1 = 0
   let temp2 = 0
@@ -251,7 +230,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
       document.getElementsByClassName('div-end-of-game')[0].appendChild(btn)
     }
   }
-  game.checkWinner = checkWinner
 
   const x = document.getElementById('myAudio') as HTMLAudioElement
 
@@ -268,10 +246,8 @@ export function createGame(gameBoard: Board = new Board()): Game {
       btn.innerHTML = "<i class='fa fa-volume-up' aria-hidden='true'></i>"
     }
   }
-  game.muteAudio = muteAudio
-  game.check_match = check_match
 
-  const reset_board = () => {
+  game.reset_board = () => {
     const winner_statement = document.getElementById('winner') as HTMLElement
     gameBoard.reset()
     gameFinished = false
@@ -290,7 +266,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
     if (mute_sound_btn?.parentNode != null)
       mute_sound_btn.parentNode.removeChild(mute_sound_btn) //delete the button when resetting the board
   }
-  game.reset_board = reset_board
 
   return game
 }
