@@ -1,6 +1,7 @@
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {Board} from './board.ts'
+import {View} from "./view.ts";
 
 export type Game = {
   render_board: () => void
@@ -29,14 +30,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const game = {} as Game
 
   const render_board = () => {
-    const board_container = document.querySelector('.play-area') as HTMLElement
-    board_container.innerHTML = ''
-    board.forEach((e, i) => {
-      board_container.innerHTML += `<div id="block_${i}" class="block" onclick="addPlayerMove(${i})">${board[i]}</div>`
-      if (e === player || e === computer) {
-        document.querySelector(`#block_${i}`)?.classList.add('occupied')
-      }
-    })
+    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
   }
   game.render_board = render_board
 
