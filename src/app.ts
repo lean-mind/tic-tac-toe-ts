@@ -24,7 +24,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const player = 'O'
   const computer = 'X'
   let board = gameBoard.cells
-  let board_full = false
+  let gameFinished = false
   let ai_level = ''
 
   const game = {} as Game
@@ -49,14 +49,13 @@ export function createGame(gameBoard: Board = new Board()): Game {
     configure_ai()
   }
 
-  const checkBoardComplete = () => {
-    board_full = board.every((item) => item !== '')
+  game.checkBoardComplete = () => {
+    gameFinished = gameBoard.isFull()
   }
-  game.checkBoardComplete = checkBoardComplete
 
   const game_loop = () => {
     View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
-    checkBoardComplete()
+    gameFinished = gameBoard.isFull()
     checkWinner()
   }
   game.game_loop = game_loop
@@ -77,7 +76,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   game.randomizeStart = randomizeStart
 
   window.addPlayerMove = (cellPosition) => {
-    if (gameBoard.isMoveAvailableIn(cellPosition) && !board_full) {
+    if (gameBoard.isMoveAvailableIn(cellPosition) && !gameFinished) {
       const querySelector = document.querySelector(
         '#ai_level',
       ) as HTMLSelectElement
@@ -89,7 +88,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   }
 
   const addComputerMove = (ai_level: string) => {
-    if (!board_full) {
+    if (!gameFinished) {
       let score = 0
       let compare: Comparator = (a, b) => a > b
       switch (ai_level) {
@@ -150,8 +149,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     if (check_line(2, 4, 6)) {
       return board[2]
     }
-    checkBoardComplete()
-    if (board_full) return 'tie'
+    if (gameBoard.isFull()) return 'tie'
     return ''
   }
 
@@ -211,7 +209,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     if (res === player) {
       winner_statement.innerText = 'Player Won'
       winner_statement.classList.add('playerWin')
-      board_full = true
+      gameFinished = true
       playerstat1++
       loss2++
       temp1 = temp1 + playerstat1
@@ -223,7 +221,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     } else if (res === computer) {
       winner_statement.innerText = 'Computer Won'
       winner_statement.classList.add('computerWin')
-      board_full = true
+      gameFinished = true
       computerstat1++
       loss1++
       temp2 = temp2 + computerstat1
@@ -232,7 +230,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       audio.pause()
       endMusic = new Audio(gameOverAudio)
       endMusic.play()
-    } else if (board_full) {
+    } else if (gameBoard.isFull()) {
       winner_statement.innerText = 'Draw...'
       winner_statement.classList.add('draw')
       draw1++
@@ -310,7 +308,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const reset_board = () => {
     const winner_statement = document.getElementById('winner') as HTMLElement
     board = ['', '', '', '', '', '', '', '', '']
-    board_full = false
+    gameFinished = false
     winner_statement.classList.remove('playerWin')
     winner_statement.classList.remove('computerWin')
     winner_statement.classList.remove('draw')

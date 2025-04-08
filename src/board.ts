@@ -17,6 +17,10 @@ export class Board {
     return this._cells.every((cell) => cell === '')
   }
 
+  isFull(): boolean {
+    return this._cells.every((cell) => cell !== '')
+  }
+
   isMoveAvailableIn(cellPosition: number): boolean {
     return this._cells[cellPosition] === ''
   }
