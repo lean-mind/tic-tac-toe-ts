@@ -2,6 +2,7 @@ import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {BoardComponent} from './board.component.ts'
 import {Board} from './board.ts'
+import {StatisticsComponent} from "./statistics.component.ts";
 import {Statistics} from './statistics.ts'
 import {View} from './view.ts'
 
@@ -16,6 +17,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const statistics = new Statistics()
   const boardComponent = new BoardComponent(
     document.getElementById('play') as HTMLElement,
+  )
+  const statisticsComponent = new StatisticsComponent(
+    document.getElementById('statistics') as HTMLElement,
   )
   let gameFinished = false
   let aiLevel = ''
@@ -163,10 +167,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       audio.pause()
       endMusic = selectEndAudioBasedOn(winner)
       endMusic.play().then()
-      const statisticsElement = document.getElementById(
-        'statistics',
-      ) as HTMLElement
-      View.renderStatistics(statistics, statisticsElement)
+      statisticsComponent.renderFor(statistics)
 
       //when the game ends, I create and add a button in the 'div-end-of-game' div
       const btn = document.createElement('button')
