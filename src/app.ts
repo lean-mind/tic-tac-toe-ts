@@ -1,10 +1,10 @@
+import {AiSelectComponent} from "./aiselect.component.ts";
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {BoardComponent} from './board.component.ts'
 import {Board} from './board.ts'
 import {StatisticsComponent} from './statistics.component.ts'
 import {Statistics} from './statistics.ts'
-import {View} from './view.ts'
 import {WinnerStatementComponent} from './winnerstatement.component.ts'
 
 export type Game = {
@@ -24,6 +24,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
   )
   const winnerStatementElement = new WinnerStatementComponent(
     document.getElementById('winner') as HTMLElement,
+  )
+  const aiSelectComponent = new AiSelectComponent(
+    document.getElementById('ai_level') as HTMLSelectElement,
   )
   let gameFinished = false
   let aiLevel = ''
@@ -72,10 +75,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   window.addPlayerMove = (cellPosition) => {
     if (gameBoard.isMoveAvailableIn(cellPosition) && !gameFinished) {
-      const difficultySelector = document.querySelector(
-        '#ai_level',
-      ) as HTMLSelectElement
-      View.deactivateSelect(difficultySelector)
+      aiSelectComponent.render(true)
       gameBoard.addPlayerMoveIn(cellPosition)
       gameLoop()
       addComputerMoveBasedOn(aiLevel)
