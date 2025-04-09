@@ -1,6 +1,7 @@
-export type Player = 'O'
-export type Computer = 'X'
-export type Cell = Computer | Player | ''
+export type Winner = 'player' | 'computer' | 'draw' | 'none'
+export type PlayerMove = 'O'
+export type ComputerMove = 'X'
+export type Cell = ComputerMove | PlayerMove | ''
 
 export class Board {
   private _cells: Cell[]
@@ -33,7 +34,10 @@ export class Board {
     this.addMoveIn(cellPosition, 'X')
   }
 
-  private addMoveIn(cellPosition: number, move: Player | Computer): void {
+  private addMoveIn(
+    cellPosition: number,
+    move: PlayerMove | ComputerMove,
+  ): void {
     this._cells[cellPosition] = move
   }
 
@@ -45,15 +49,20 @@ export class Board {
     this._cells = ['', '', '', '', '', '', '', '', '']
   }
 
-  playerCompletesAnyLine(): boolean {
-    return this.anyLineIsCompletedFor('O')
+  whoIsTheWinner(): Winner {
+    if (this.anyLineIsCompletedFor('O')) {
+      return 'player'
+    }
+    if (this.anyLineIsCompletedFor('X')) {
+      return 'computer'
+    }
+    if (this.isFull()) {
+      return 'draw'
+    }
+    return 'none'
   }
 
-  computerCompletesAnyLine(): boolean {
-    return this.anyLineIsCompletedFor('X')
-  }
-
-  private anyLineIsCompletedFor(move: Player | Computer): boolean {
+  private anyLineIsCompletedFor(move: PlayerMove | ComputerMove): boolean {
     const horizonatalWinningCombinations = [
       [0, 1, 2],
       [3, 4, 5],

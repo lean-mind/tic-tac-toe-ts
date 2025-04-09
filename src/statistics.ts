@@ -1,3 +1,5 @@
+import type {Winner} from "./board.ts";
+
 export class Statistics {
   private _totalPlayerWins = 0
   private _totalComputerWins = 0
@@ -13,15 +15,15 @@ export class Statistics {
     return this._totalPlayerWins
   }
 
-  updateForPlayerWin(): void {
-    this._totalPlayerWins += 1
-  }
-
-  updateForComputerWin(): void {
-    this._totalComputerWins += 1
-  }
-
-  updateForDraw(): void {
-    this._totalDraws += 1
+  updateFor(winner: Winner): void {
+    if (winner === 'draw') {
+      this._totalDraws += 1
+    }
+    if (winner === 'player') {
+      this._totalPlayerWins += 1
+    }
+    if (winner === 'computer') {
+      this._totalComputerWins += 1
+    }
   }
 }

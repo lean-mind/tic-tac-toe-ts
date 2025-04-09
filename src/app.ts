@@ -12,8 +12,6 @@ export type Game = {
 type Comparator = (a: number, b: number) => boolean
 
 export function createGame(gameBoard: Board = new Board()): Game {
-  const player = 'O'
-  const computer = 'X'
   const statistics = new Statistics()
   let gameFinished = false
   let aiLevel = ''
@@ -110,22 +108,11 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
   }
 
-  const scores = { X: 1, O: -1, tie: 0 }
-
-  const checkMatch = (): 'X' | 'O' | 'tie' | '' => {
-    if (gameBoard.playerCompletesAnyLine()) {
-      return player
-    }
-    if (gameBoard.computerCompletesAnyLine()) {
-      return computer
-    }
-    if (gameBoard.isFull()) return 'tie'
-    return ''
-  }
+  const scores = { computer: 1, player: -1, draw: 0 }
 
   const minimax = (board: Board, isMaximizing: boolean) => {
-    const res = checkMatch()
-    if (res !== '') {
+    const res = board.whoIsTheWinner()
+    if (res !== 'none') {
       return scores[res]
     }
     if (isMaximizing) {
@@ -153,33 +140,30 @@ export function createGame(gameBoard: Board = new Board()): Game {
   let endMusic: HTMLAudioElement | null = null //the Audio object for the music at the end of the game
 
   const checkWinner = () => {
-    const winner = checkMatch()
+    const winner = gameBoard.whoIsTheWinner()
 
     const winner_statement = document.getElementById('winner') as HTMLElement
     const audio = document.querySelector('audio') as HTMLAudioElement
-
-    if (winner === player) {
+    statistics.updateFor(winner)
+    if (winner === 'player') {
       winner_statement.innerText = 'Player Won'
       winner_statement.classList.add('playerWin')
       gameFinished = true
-      statistics.updateForPlayerWin()
       console.log('player win')
       audio.pause()
       endMusic = new Audio(winAudio)
       endMusic.play()
-    } else if (winner === computer) {
+    } else if (winner === 'computer') {
       winner_statement.innerText = 'Computer Won'
       winner_statement.classList.add('computerWin')
       gameFinished = true
-      statistics.updateForComputerWin()
       console.log('computer win')
       audio.pause()
       endMusic = new Audio(gameOverAudio)
       endMusic.play()
-    } else if (gameBoard.isFull()) {
+    } else if (winner === 'draw') {
       winner_statement.innerText = 'Draw...'
       winner_statement.classList.add('draw')
-      statistics.updateForDraw()
       console.log('draw')
       audio.pause()
       endMusic = new Audio(gameOverAudio)
@@ -203,7 +187,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     const draw2Element = document.getElementById('draw2') as HTMLElement
     draw2Element.innerText = `${statistics.totalDraws}`
 
-    if (winner !== '') {
+    if (winner !== 'none') {
       //when the game ends, I create and add a button in the 'div-end-of-game' div
       const btn = document.createElement('button')
       btn.className = 'btn-sound'
