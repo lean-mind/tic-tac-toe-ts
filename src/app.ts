@@ -20,7 +20,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const statisticsComponent = new StatisticsComponent(
     document.getElementById('statistics') as HTMLElement,
   )
-  const winnerStatementElement = new WinnerStatementComponent(
+  const winnerStatementComponent = new WinnerStatementComponent(
     document.getElementById('winner') as HTMLElement,
   )
   const aiSelectComponent = new AiSelectComponent(
@@ -156,7 +156,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     const winner = gameBoard.whoIsTheWinner()
 
     if (winner !== 'none') {
-      winnerStatementElement.renderFor(winner)
+      winnerStatementComponent.renderFor(winner)
       const audio = document.querySelector('audio') as HTMLAudioElement
 
       statistics.updateFor(winner)
@@ -193,13 +193,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
   }
 
   const resetBoard = () => {
-    const winner_statement = document.getElementById('winner') as HTMLElement
     gameBoard.reset()
     gameFinished = false
-    winner_statement.classList.remove('playerWin')
-    winner_statement.classList.remove('computerWin')
-    winner_statement.classList.remove('draw')
-    winner_statement.innerText = ''
+    winnerStatementComponent.renderFor('none')
     aiSelectComponent.render()
 
     renderBoard()

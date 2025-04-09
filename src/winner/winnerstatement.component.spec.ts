@@ -38,4 +38,17 @@ describe('Winner statement component should', () => {
     expect(winnerStatementElement.innerText).toBe('Draw')
     expect(winnerStatementElement).toHaveClass('draw')
   })
+  it('reset winner statement', async () => {
+    const { body } = await render()
+    const { getByTestId } = within(body)
+    const winnerStatementElement = getByTestId('winner')
+    const component = new WinnerStatementComponent(winnerStatementElement)
+
+    component.renderFor('none')
+
+    expect(winnerStatementElement.innerText).toBe('')
+    expect(winnerStatementElement).not.toHaveClass('draw')
+    expect(winnerStatementElement).not.toHaveClass('playerWin')
+    expect(winnerStatementElement).not.toHaveClass('computerWin')
+  })
 })
