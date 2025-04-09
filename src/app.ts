@@ -31,17 +31,13 @@ export function createGame(gameBoard: Board = new Board()): Game {
     },
   )
   let gameFinished = false
-  const renderBoard = () => {
-    boardComponent.renderFor(gameBoard)
-  }
-
   const start = () => {
-    renderBoard()
+    boardComponent.renderFor(gameBoard)
     difficultyComponent.render()
   }
 
   const gameLoop = () => {
-    renderBoard()
+    boardComponent.renderFor(gameBoard)
     gameFinished = gameBoard.isFull()
     checkWinner()
   }
@@ -187,7 +183,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     winnerStatementComponent.renderFor('none')
     difficultyComponent.render()
 
-    renderBoard()
+    boardComponent.renderFor(gameBoard)
     randomizeStart()
 
     const mute_sound_btn = document.getElementsByClassName('btn-sound')[0]
