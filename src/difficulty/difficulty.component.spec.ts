@@ -2,14 +2,14 @@ import {within} from '@testing-library/dom'
 import {userEvent} from '@testing-library/user-event'
 import {describe, expect, it, vi} from 'vitest'
 import {render} from '../../test/dom'
-import {AiSelectComponent} from './aiselect.component'
+import {DifficultyComponent} from './difficulty.component'
 
-describe('AI select component should', () => {
+describe('Difficulty component should', () => {
   it('render a select with AI options', async () => {
     const { body } = await render()
     const { getByTestId } = within(body)
     const aiSelectElement = getByTestId('ai_level') as HTMLSelectElement
-    const component = new AiSelectComponent(aiSelectElement, () => {})
+    const component = new DifficultyComponent(aiSelectElement, () => {})
 
     component.render()
 
@@ -23,18 +23,18 @@ describe('AI select component should', () => {
     const { body } = await render()
     const { getByTestId } = within(body)
     const aiSelectElement = getByTestId('ai_level') as HTMLSelectElement
-    const component = new AiSelectComponent(aiSelectElement, () => {})
+    const component = new DifficultyComponent(aiSelectElement, () => {})
 
     component.render(true)
 
     expect(aiSelectElement.disabled).toBe(true)
   })
-  it('emit the selected value', async () => {
+  it('emit the selected difficulty', async () => {
     const { body } = await render()
     const { getByTestId } = within(body)
     const mockOnSelect = vi.fn()
     const aiSelectElement = getByTestId('ai_level') as HTMLSelectElement
-    const component = new AiSelectComponent(aiSelectElement, mockOnSelect)
+    const component = new DifficultyComponent(aiSelectElement, mockOnSelect)
     component.render()
 
     await userEvent.selectOptions(aiSelectElement, 'normal')

@@ -1,7 +1,7 @@
-import {type AiLevel, AiSelectComponent} from './ai'
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {Board, BoardComponent} from './board'
+import {type Difficulty, DifficultyComponent} from './difficulty'
 import {Statistics, StatisticsComponent} from './statistics'
 import {WinnerStatementComponent} from './winner'
 
@@ -14,7 +14,7 @@ type Comparator = (a: number, b: number) => boolean
 
 export function createGame(gameBoard: Board = new Board()): Game {
   const statistics = new Statistics()
-  let aiLevel: AiLevel = 'easy'
+  let difficulty: Difficulty = 'easy'
   const boardComponent = new BoardComponent(
     document.getElementById('play') as HTMLElement,
   )
@@ -24,10 +24,10 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const winnerStatementComponent = new WinnerStatementComponent(
     document.getElementById('winner') as HTMLElement,
   )
-  const aiSelectComponent = new AiSelectComponent(
+  const difficultyComponent = new DifficultyComponent(
     document.getElementById('ai_level') as HTMLSelectElement,
     (value) => {
-      aiLevel = value
+      difficulty = value
     },
   )
   let gameFinished = false
@@ -37,7 +37,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   const start = () => {
     renderBoard()
-    aiSelectComponent.render()
+    difficultyComponent.render()
   }
 
   const gameLoop = () => {
@@ -52,7 +52,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       const COMPUTER = 1
       const start = Math.round(Math.random())
       if (start === COMPUTER) {
-        addComputerMoveBasedOn(aiLevel)
+        addComputerMoveBasedOn(difficulty)
         console.log('COMPUTER STARTED')
       } else {
         console.log('PLAYER STARTS')
@@ -62,10 +62,10 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   window.addPlayerMove = (cellPosition) => {
     if (gameBoard.isMoveAvailableIn(cellPosition) && !gameFinished) {
-      aiSelectComponent.render(true)
+      difficultyComponent.render(true)
       gameBoard.addPlayerMoveIn(cellPosition)
       gameLoop()
-      addComputerMoveBasedOn(aiLevel)
+      addComputerMoveBasedOn(difficulty)
     }
   }
 
@@ -185,7 +185,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     gameBoard.reset()
     gameFinished = false
     winnerStatementComponent.renderFor('none')
-    aiSelectComponent.render()
+    difficultyComponent.render()
 
     renderBoard()
     randomizeStart()

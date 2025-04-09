@@ -1,12 +1,12 @@
-import type {AiLevel} from "./level.ts";
+import type {Difficulty} from './difficulty.ts'
 
-export class AiSelectComponent {
+export class DifficultyComponent {
   constructor(
     private aiSelectElement: HTMLSelectElement,
-    private onSelect: (value: AiLevel) => void,
+    private onSelect: (value: Difficulty) => void,
   ) {
     this.aiSelectElement.addEventListener('change', () => {
-      this.onSelect(this.aiSelectElement.value as AiLevel)
+      this.onSelect(this.aiSelectElement.value as Difficulty)
     })
   }
 
