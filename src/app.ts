@@ -28,13 +28,17 @@ export function createGame(gameBoard: Board = new Board()): Game {
     })
   }
 
-  const start = () => {
+  const renderBoard = () => {
     View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
+  }
+
+  const start = () => {
+    renderBoard()
     configure_ai()
   }
 
   const game_loop = () => {
-    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
+    renderBoard()
     gameFinished = gameBoard.isFull()
     checkWinner()
   }
@@ -237,7 +241,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     const aiLevel = document.querySelector('#ai_level') as HTMLSelectElement
     aiLevel.disabled = false
 
-    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
+    renderBoard()
     randomizeStart()
     document.querySelector('.play-area')
 
