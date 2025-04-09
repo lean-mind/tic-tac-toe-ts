@@ -1,4 +1,5 @@
-export type Winner = 'player' | 'computer' | 'draw' | 'none'
+import type {Winner} from './winner.ts'
+
 export type PlayerMove = 'O'
 export type ComputerMove = 'X'
 export type Cell = ComputerMove | PlayerMove | ''

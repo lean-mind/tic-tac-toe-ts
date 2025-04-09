@@ -2,9 +2,10 @@ import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {BoardComponent} from './board.component.ts'
 import {Board} from './board.ts'
-import {StatisticsComponent} from "./statistics.component.ts";
+import {StatisticsComponent} from './statistics.component.ts'
 import {Statistics} from './statistics.ts'
 import {View} from './view.ts'
+import {WinnerStatementComponent} from './winnerstatement.component.ts'
 
 export type Game = {
   start: () => void
@@ -20,6 +21,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
   )
   const statisticsComponent = new StatisticsComponent(
     document.getElementById('statistics') as HTMLElement,
+  )
+  const winnerStatementElement = new WinnerStatementComponent(
+    document.getElementById('winner') as HTMLElement,
   )
   let gameFinished = false
   let aiLevel = ''
@@ -156,11 +160,9 @@ export function createGame(gameBoard: Board = new Board()): Game {
     const winner = gameBoard.whoIsTheWinner()
 
     if (winner !== 'none') {
-      const winnerStatementElement = document.getElementById(
-        'winner',
-      ) as HTMLElement
+      winnerStatementElement.renderFor(winner)
       const audio = document.querySelector('audio') as HTMLAudioElement
-      View.renderWinnerStatementFor(winner, winnerStatementElement)
+
       statistics.updateFor(winner)
       gameFinished = true
       console.log(`${winner} win`)
