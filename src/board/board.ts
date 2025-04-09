@@ -1,4 +1,4 @@
-import type {Winner} from './winner.ts'
+import type {Winner} from '../winner'
 
 export type PlayerMove = 'O'
 export type ComputerMove = 'X'

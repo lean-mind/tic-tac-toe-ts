@@ -1,4 +1,4 @@
-import type {Winner} from "./winner.ts";
+import type {Winner} from '../winner'
 
 export class Statistics {
   private _totalPlayerWins = 0

@@ -1,6 +1,6 @@
 import {within} from '@testing-library/dom'
 import {describe, expect, it} from 'vitest'
-import {render} from '../test/dom'
+import {render} from '../../test/dom'
 import {WinnerStatementComponent} from './winnerstatement.component'
 
 describe('Winner statement component should', () => {

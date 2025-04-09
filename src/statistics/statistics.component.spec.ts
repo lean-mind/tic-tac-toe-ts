@@ -1,6 +1,6 @@
 import {within} from '@testing-library/dom'
 import {describe, expect, it} from 'vitest'
-import {render} from '../test/dom'
+import {render} from '../../test/dom'
 import {Statistics} from './statistics'
 import {StatisticsComponent} from './statistics.component'
 

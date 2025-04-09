@@ -1,6 +1,6 @@
 import {within} from '@testing-library/dom'
 import {describe, expect, it} from 'vitest'
-import {render} from '../test/dom'
+import {render} from '../../test/dom'
 import {AiSelectComponent} from './aiselect.component'
 
 describe('AI select component should', () => {

@@ -1,11 +1,9 @@
-import {AiSelectComponent} from "./aiselect.component.ts";
+import {AiSelectComponent} from './ai'
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
-import {BoardComponent} from './board.component.ts'
-import {Board} from './board.ts'
-import {StatisticsComponent} from './statistics.component.ts'
-import {Statistics} from './statistics.ts'
-import {WinnerStatementComponent} from './winnerstatement.component.ts'
+import {Board, BoardComponent} from './board'
+import {Statistics, StatisticsComponent} from './statistics'
+import {WinnerStatementComponent} from './winner'
 
 export type Game = {
   start: () => void
