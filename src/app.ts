@@ -1,5 +1,6 @@
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
+import {BoardComponent} from './board.component.ts'
 import {Board} from './board.ts'
 import {Statistics} from './statistics.ts'
 import {View} from './view.ts'
@@ -13,6 +14,9 @@ type Comparator = (a: number, b: number) => boolean
 
 export function createGame(gameBoard: Board = new Board()): Game {
   const statistics = new Statistics()
+  const boardComponent = new BoardComponent(
+    document.getElementById('play') as HTMLElement,
+  )
   let gameFinished = false
   let aiLevel = ''
 
@@ -30,7 +34,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   }
 
   const renderBoard = () => {
-    View.renderBoard(gameBoard, document.getElementById('play') as HTMLElement)
+    boardComponent.renderFor(gameBoard)
   }
 
   const start = () => {
