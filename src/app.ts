@@ -1,6 +1,7 @@
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {Board} from './board.ts'
+import {Statistics} from './statistics.ts'
 import {View} from './view.ts'
 
 export type Game = {
@@ -144,23 +145,12 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
   }
 
-  let totalPlayerWins = 0
-  let totalComputerWins = 0
-  let totalComputerLoses = 0
-  let totalPlayerLoses = 0
-  let totalPlayerDraws = 0
-  let totalComputerDraws = 0
+  const statistics = new Statistics()
 
   let endMusic: HTMLAudioElement | null = null //the Audio object for the music at the end of the game
 
   const checkWinner = () => {
     const winner = checkMatch()
-    let playerWins = 0
-    let computerWins = 0
-    let playerLoses = 0
-    let computerLoses = 0
-    let playerDraws = 0
-    let computerDraws = 0
 
     const winner_statement = document.getElementById('winner') as HTMLElement
     const audio = document.querySelector('audio') as HTMLAudioElement
@@ -169,10 +159,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       winner_statement.innerText = 'Player Won'
       winner_statement.classList.add('playerWin')
       gameFinished = true
-      playerWins++
-      computerLoses++
-      totalPlayerWins = totalPlayerWins + playerWins
-      totalComputerLoses = totalComputerLoses + computerLoses
+      statistics.updateForPlayerWin()
       console.log('player win')
       audio.pause()
       endMusic = new Audio(winAudio)
@@ -181,10 +168,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       winner_statement.innerText = 'Computer Won'
       winner_statement.classList.add('computerWin')
       gameFinished = true
-      computerWins++
-      playerLoses++
-      totalComputerWins = totalComputerWins + computerWins
-      totalPlayerLoses = totalPlayerLoses + playerLoses
+      statistics.updateForComputerWin()
       console.log('computer win')
       audio.pause()
       endMusic = new Audio(gameOverAudio)
@@ -192,10 +176,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
     } else if (gameBoard.isFull()) {
       winner_statement.innerText = 'Draw...'
       winner_statement.classList.add('draw')
-      playerDraws++
-      computerDraws++
-      totalPlayerDraws = totalPlayerDraws + playerDraws
-      totalComputerDraws = totalComputerDraws + computerDraws
+      statistics.updateForDraw()
       console.log('draw')
       audio.pause()
       endMusic = new Audio(gameOverAudio)
@@ -205,26 +186,21 @@ export function createGame(gameBoard: Board = new Board()): Game {
     const playerStat1Element = document.getElementById(
       'playerstat1',
     ) as HTMLElement
-    playerStat1Element.innerText = `${totalPlayerWins}`
+    playerStat1Element.innerText = `${statistics.totalPlayerWins}`
     const computerStat1Element = document.getElementById(
       'computerstat1',
     ) as HTMLElement
-    computerStat1Element.innerText = `${totalComputerWins}`
+    computerStat1Element.innerText = `${statistics.totalComputerWins}`
     const loss1Element = document.getElementById('loss1') as HTMLElement
-    loss1Element.innerText = `${totalPlayerLoses}`
+    loss1Element.innerText = `${statistics.totalComputerWins}`
     const loss2Element = document.getElementById('loss2') as HTMLElement
-    loss2Element.innerText = `${totalComputerLoses}`
+    loss2Element.innerText = `${statistics.totalPlayerWins}`
     const draw1Element = document.getElementById('draw1') as HTMLElement
-    draw1Element.innerText = `${totalPlayerDraws}`
+    draw1Element.innerText = `${statistics.totalDraws}`
     const draw2Element = document.getElementById('draw2') as HTMLElement
-    draw2Element.innerText = `${totalComputerDraws}`
+    draw2Element.innerText = `${statistics.totalDraws}`
 
-    if (
-      playerLoses === 1 ||
-      computerLoses === 1 ||
-      playerDraws === 1 ||
-      computerDraws === 1
-    ) {
+    if (winner !== '') {
       //when the game ends, I create and add a button in the 'div-end-of-game' div
       const btn = document.createElement('button')
       btn.className = 'btn-sound'
