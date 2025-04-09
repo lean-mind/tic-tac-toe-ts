@@ -17,11 +17,13 @@ export function createGame(gameBoard: Board = new Board()): Game {
   let aiLevel = ''
 
   const configureAi = () => {
-    const ai_select = document.querySelector('#ai_level') as HTMLSelectElement
-    aiLevel = Array.from(ai_select.options).filter(
+    const aiSelectElement = document.querySelector(
+      '#ai_level',
+    ) as HTMLSelectElement
+    aiLevel = Array.from(aiSelectElement.options).filter(
       (option) => option.defaultSelected,
     )[0].value
-    ai_select.addEventListener('change', (event) => {
+    aiSelectElement.addEventListener('change', (event) => {
       const target = event.target as HTMLSelectElement
       aiLevel = target.options[target.selectedIndex].value
     })
