@@ -108,12 +108,12 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
   }
 
-  const scores = { computer: 1, player: -1, draw: 0 }
+  const minimaxEvaluation = { computer: 1, player: -1, draw: 0 }
 
   const minimax = (board: Board, isMaximizing: boolean) => {
     const winner = board.whoIsTheWinner()
     if (winner !== 'none') {
-      return scores[winner]
+      return minimaxEvaluation[winner]
     }
     if (isMaximizing) {
       let bestScore = Number.NEGATIVE_INFINITY
