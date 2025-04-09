@@ -68,11 +68,11 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
   }
 
-  const addComputerMoveBasedOn = (ai_level: string) => {
+  const addComputerMoveBasedOn = (aiLevel: string) => {
     if (!gameFinished) {
       let score = 0
       let compare: Comparator = (a, b) => a > b
-      switch (ai_level) {
+      switch (aiLevel) {
         case 'hard':
           score = Number.NEGATIVE_INFINITY
           compare = (a, b) => a > b
