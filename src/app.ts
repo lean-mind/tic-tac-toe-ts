@@ -136,17 +136,15 @@ export function createGame(gameBoard: Board = new Board()): Game {
         bestScore = Math.max(score, bestScore)
       }
       return bestScore
-      // biome-ignore lint/style/noUselessElse: why not
-    } else {
-      let bestScore = Number.POSITIVE_INFINITY
-      for (const availableCellPosition of board.availableCellPositions()) {
-        board.addPlayerMoveIn(availableCellPosition)
-        const score = minimax(board, true)
-        board.removeMoveIn(availableCellPosition)
-        bestScore = Math.min(score, bestScore)
-      }
-      return bestScore
     }
+    let bestScore = Number.POSITIVE_INFINITY
+    for (const availableCellPosition of board.availableCellPositions()) {
+      board.addPlayerMoveIn(availableCellPosition)
+      const score = minimax(board, true)
+      board.removeMoveIn(availableCellPosition)
+      bestScore = Math.min(score, bestScore)
+    }
+    return bestScore
   }
 
   let endMusic: HTMLAudioElement | null = null //the Audio object for the music at the end of the game
@@ -202,12 +200,10 @@ export function createGame(gameBoard: Board = new Board()): Game {
     winner_statement.classList.remove('computerWin')
     winner_statement.classList.remove('draw')
     winner_statement.innerText = ''
-    const aiLevel = document.querySelector('#ai_level') as HTMLSelectElement
-    aiLevel.disabled = false
+    aiSelectComponent.render()
 
     renderBoard()
     randomizeStart()
-    document.querySelector('.play-area')
 
     const mute_sound_btn = document.getElementsByClassName('btn-sound')[0]
     if (mute_sound_btn?.parentNode != null)
