@@ -1,5 +1,6 @@
 import {within} from '@testing-library/dom'
-import {describe, expect, it} from 'vitest'
+import {userEvent} from '@testing-library/user-event'
+import {describe, expect, it, vi} from 'vitest'
 import {render} from '../../test/dom'
 import {AiSelectComponent} from './aiselect.component'
 
@@ -8,7 +9,7 @@ describe('AI select component should', () => {
     const { body } = await render()
     const { getByTestId } = within(body)
     const aiSelectElement = getByTestId('ai_level') as HTMLSelectElement
-    const component = new AiSelectComponent(aiSelectElement)
+    const component = new AiSelectComponent(aiSelectElement, () => {})
 
     component.render()
 
@@ -22,10 +23,22 @@ describe('AI select component should', () => {
     const { body } = await render()
     const { getByTestId } = within(body)
     const aiSelectElement = getByTestId('ai_level') as HTMLSelectElement
-    const component = new AiSelectComponent(aiSelectElement)
+    const component = new AiSelectComponent(aiSelectElement, () => {})
 
     component.render(true)
 
     expect(aiSelectElement.disabled).toBe(true)
+  })
+  it('emit the selected value', async () => {
+    const { body } = await render()
+    const { getByTestId } = within(body)
+    const mockOnSelect = vi.fn()
+    const aiSelectElement = getByTestId('ai_level') as HTMLSelectElement
+    const component = new AiSelectComponent(aiSelectElement, mockOnSelect)
+    component.render()
+
+    await userEvent.selectOptions(aiSelectElement, 'normal')
+
+    expect(mockOnSelect).toHaveBeenCalledWith('normal')
   })
 })

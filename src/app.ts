@@ -1,4 +1,4 @@
-import {AiSelectComponent} from './ai'
+import {type AiLevel, AiSelectComponent} from './ai'
 import gameOverAudio from './audio/gameover.wav'
 import winAudio from './audio/win.wav'
 import {Board, BoardComponent} from './board'
@@ -14,6 +14,7 @@ type Comparator = (a: number, b: number) => boolean
 
 export function createGame(gameBoard: Board = new Board()): Game {
   const statistics = new Statistics()
+  let aiLevel: AiLevel = 'easy'
   const boardComponent = new BoardComponent(
     document.getElementById('play') as HTMLElement,
   )
@@ -25,30 +26,18 @@ export function createGame(gameBoard: Board = new Board()): Game {
   )
   const aiSelectComponent = new AiSelectComponent(
     document.getElementById('ai_level') as HTMLSelectElement,
+    (value) => {
+      aiLevel = value
+    },
   )
   let gameFinished = false
-  let aiLevel = ''
-
-  const configureAi = () => {
-    const aiSelectElement = document.querySelector(
-      '#ai_level',
-    ) as HTMLSelectElement
-    aiLevel = Array.from(aiSelectElement.options).filter(
-      (option) => option.defaultSelected,
-    )[0].value
-    aiSelectElement.addEventListener('change', (event) => {
-      const target = event.target as HTMLSelectElement
-      aiLevel = target.options[target.selectedIndex].value
-    })
-  }
-
   const renderBoard = () => {
     boardComponent.renderFor(gameBoard)
   }
 
   const start = () => {
     renderBoard()
-    configureAi()
+    aiSelectComponent.render()
   }
 
   const gameLoop = () => {
