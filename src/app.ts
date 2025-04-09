@@ -14,17 +14,18 @@ type Comparator = (a: number, b: number) => boolean
 export function createGame(gameBoard: Board = new Board()): Game {
   const player = 'O'
   const computer = 'X'
+  const statistics = new Statistics()
   let gameFinished = false
-  let ai_level = ''
+  let aiLevel = ''
 
-  const configure_ai = () => {
+  const configureAi = () => {
     const ai_select = document.querySelector('#ai_level') as HTMLSelectElement
-    ai_level = Array.from(ai_select.options).filter(
+    aiLevel = Array.from(ai_select.options).filter(
       (option) => option.defaultSelected,
     )[0].value
     ai_select.addEventListener('change', (event) => {
       const target = event.target as HTMLSelectElement
-      ai_level = target.options[target.selectedIndex].value
+      aiLevel = target.options[target.selectedIndex].value
     })
   }
 
@@ -34,10 +35,10 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   const start = () => {
     renderBoard()
-    configure_ai()
+    configureAi()
   }
 
-  const game_loop = () => {
+  const gameLoop = () => {
     renderBoard()
     gameFinished = gameBoard.isFull()
     checkWinner()
@@ -49,7 +50,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
       const COMPUTER = 1
       const start = Math.round(Math.random())
       if (start === COMPUTER) {
-        addComputerMove(ai_level)
+        addComputerMoveBasedOn(aiLevel)
         console.log('COMPUTER STARTED')
       } else {
         console.log('PLAYER STARTS')
@@ -64,12 +65,12 @@ export function createGame(gameBoard: Board = new Board()): Game {
       ) as HTMLSelectElement
       View.deactivateSelect(difficultySelector)
       gameBoard.addPlayerMoveIn(cellPosition)
-      game_loop()
-      addComputerMove(ai_level)
+      gameLoop()
+      addComputerMoveBasedOn(aiLevel)
     }
   }
 
-  const addComputerMove = (ai_level: string) => {
+  const addComputerMoveBasedOn = (ai_level: string) => {
     if (!gameFinished) {
       let score = 0
       let compare: Comparator = (a, b) => a > b
@@ -105,7 +106,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
         }
       }
       gameBoard.addComputerMoveIn(nextMove)
-      game_loop()
+      gameLoop()
     }
   }
 
@@ -148,8 +149,6 @@ export function createGame(gameBoard: Board = new Board()): Game {
       return bestScore
     }
   }
-
-  const statistics = new Statistics()
 
   let endMusic: HTMLAudioElement | null = null //the Audio object for the music at the end of the game
 
