@@ -156,24 +156,11 @@ export function createGame(gameBoard: Board = new Board()): Game {
       console.log(`${winner} win`)
       audio.pause()
       endMusic = selectEndAudioBasedOn(winner)
-      endMusic.play()
-
-      const playerStat1Element = document.getElementById(
-        'playerstat1',
+      endMusic.play().then()
+      const statisticsElement = document.getElementById(
+        'statistics',
       ) as HTMLElement
-      playerStat1Element.innerText = `${statistics.totalPlayerWins}`
-      const computerStat1Element = document.getElementById(
-        'computerstat1',
-      ) as HTMLElement
-      computerStat1Element.innerText = `${statistics.totalComputerWins}`
-      const loss1Element = document.getElementById('loss1') as HTMLElement
-      loss1Element.innerText = `${statistics.totalComputerWins}`
-      const loss2Element = document.getElementById('loss2') as HTMLElement
-      loss2Element.innerText = `${statistics.totalPlayerWins}`
-      const draw1Element = document.getElementById('draw1') as HTMLElement
-      draw1Element.innerText = `${statistics.totalDraws}`
-      const draw2Element = document.getElementById('draw2') as HTMLElement
-      draw2Element.innerText = `${statistics.totalDraws}`
+      View.renderStatistics(statistics, statisticsElement)
 
       //when the game ends, I create and add a button in the 'div-end-of-game' div
       const btn = document.createElement('button')
