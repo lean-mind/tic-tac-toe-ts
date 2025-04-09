@@ -54,10 +54,10 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   window.addPlayerMove = (cellPosition) => {
     if (gameBoard.isMoveAvailableIn(cellPosition) && !gameFinished) {
-      const dificultySelector = document.querySelector(
+      const difficultySelector = document.querySelector(
         '#ai_level',
       ) as HTMLSelectElement
-      View.deactivateSelect(dificultySelector)
+      View.deactivateSelect(difficultySelector)
       gameBoard.addPlayerMoveIn(cellPosition)
       game_loop()
       addComputerMove(ai_level)
@@ -106,7 +106,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   const scores = { X: 1, O: -1, tie: 0 }
 
-  const check_match = (): 'X' | 'O' | 'tie' | '' => {
+  const checkMatch = (): 'X' | 'O' | 'tie' | '' => {
     if (gameBoard.playerCompletesAnyLine()) {
       return player
     }
@@ -118,7 +118,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   }
 
   const minimax = (board: Board, isMaximizing: boolean) => {
-    const res = check_match()
+    const res = checkMatch()
     if (res !== '') {
       return scores[res]
     }
@@ -144,47 +144,47 @@ export function createGame(gameBoard: Board = new Board()): Game {
     }
   }
 
-  let temp1 = 0
-  let temp2 = 0
-  let temp3 = 0
-  let temp4 = 0
-  let temp5 = 0
-  let temp6 = 0
+  let totalPlayerWins = 0
+  let totalComputerWins = 0
+  let totalComputerLoses = 0
+  let totalPlayerLoses = 0
+  let totalPlayerDraws = 0
+  let totalComputerDraws = 0
 
   let endMusic: HTMLAudioElement | null = null //the Audio object for the music at the end of the game
 
   const checkWinner = () => {
-    const res = check_match()
-    let playerstat1 = 0
-    let computerstat1 = 0
-    let loss1 = 0
-    let loss2 = 0
-    let draw1 = 0
-    let draw2 = 0
+    const winner = checkMatch()
+    let playerWins = 0
+    let computerWins = 0
+    let playerLoses = 0
+    let computerLoses = 0
+    let playerDraws = 0
+    let computerDraws = 0
 
     const winner_statement = document.getElementById('winner') as HTMLElement
     const audio = document.querySelector('audio') as HTMLAudioElement
 
-    if (res === player) {
+    if (winner === player) {
       winner_statement.innerText = 'Player Won'
       winner_statement.classList.add('playerWin')
       gameFinished = true
-      playerstat1++
-      loss2++
-      temp1 = temp1 + playerstat1
-      temp3 = temp3 + loss2
+      playerWins++
+      computerLoses++
+      totalPlayerWins = totalPlayerWins + playerWins
+      totalComputerLoses = totalComputerLoses + computerLoses
       console.log('player win')
       audio.pause()
       endMusic = new Audio(winAudio)
       endMusic.play()
-    } else if (res === computer) {
+    } else if (winner === computer) {
       winner_statement.innerText = 'Computer Won'
       winner_statement.classList.add('computerWin')
       gameFinished = true
-      computerstat1++
-      loss1++
-      temp2 = temp2 + computerstat1
-      temp4 = temp4 + loss1
+      computerWins++
+      playerLoses++
+      totalComputerWins = totalComputerWins + computerWins
+      totalPlayerLoses = totalPlayerLoses + playerLoses
       console.log('computer win')
       audio.pause()
       endMusic = new Audio(gameOverAudio)
@@ -192,10 +192,10 @@ export function createGame(gameBoard: Board = new Board()): Game {
     } else if (gameBoard.isFull()) {
       winner_statement.innerText = 'Draw...'
       winner_statement.classList.add('draw')
-      draw1++
-      draw2++
-      temp5 = temp5 + draw1
-      temp6 = temp6 + draw2
+      playerDraws++
+      computerDraws++
+      totalPlayerDraws = totalPlayerDraws + playerDraws
+      totalComputerDraws = totalComputerDraws + computerDraws
       console.log('draw')
       audio.pause()
       endMusic = new Audio(gameOverAudio)
@@ -205,21 +205,26 @@ export function createGame(gameBoard: Board = new Board()): Game {
     const playerStat1Element = document.getElementById(
       'playerstat1',
     ) as HTMLElement
-    playerStat1Element.innerText = `${temp1}`
+    playerStat1Element.innerText = `${totalPlayerWins}`
     const computerStat1Element = document.getElementById(
       'computerstat1',
     ) as HTMLElement
-    computerStat1Element.innerText = `${temp2}`
+    computerStat1Element.innerText = `${totalComputerWins}`
     const loss1Element = document.getElementById('loss1') as HTMLElement
-    loss1Element.innerText = `${temp4}`
+    loss1Element.innerText = `${totalPlayerLoses}`
     const loss2Element = document.getElementById('loss2') as HTMLElement
-    loss2Element.innerText = `${temp3}`
+    loss2Element.innerText = `${totalComputerLoses}`
     const draw1Element = document.getElementById('draw1') as HTMLElement
-    draw1Element.innerText = `${temp5}`
+    draw1Element.innerText = `${totalPlayerDraws}`
     const draw2Element = document.getElementById('draw2') as HTMLElement
-    draw2Element.innerText = `${temp6}`
+    draw2Element.innerText = `${totalComputerDraws}`
 
-    if (loss1 === 1 || loss2 === 1 || draw1 === 1 || draw2 === 1) {
+    if (
+      playerLoses === 1 ||
+      computerLoses === 1 ||
+      playerDraws === 1 ||
+      computerDraws === 1
+    ) {
       //when the game ends, I create and add a button in the 'div-end-of-game' div
       const btn = document.createElement('button')
       btn.className = 'btn-sound'
@@ -232,7 +237,7 @@ export function createGame(gameBoard: Board = new Board()): Game {
   const x = document.getElementById('myAudio') as HTMLAudioElement
 
   const muteAudio = () => {
-    //mutes or demutes all the audio (music and end game music)
+    //mutes or unmute all the audio (music and end game music)
     const btn = document.getElementsByClassName('btn-sound')[0]
     if (!x.muted) {
       x.muted = true
