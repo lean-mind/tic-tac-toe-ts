@@ -139,55 +139,42 @@ export function createGame(gameBoard: Board = new Board()): Game {
 
   let endMusic: HTMLAudioElement | null = null //the Audio object for the music at the end of the game
 
+  const selectEndAudioBasedOn = (winner: string) =>
+    winner === 'player' ? new Audio(winAudio) : new Audio(gameOverAudio)
+
   const checkWinner = () => {
     const winner = gameBoard.whoIsTheWinner()
 
-    const winner_statement = document.getElementById('winner') as HTMLElement
-    const audio = document.querySelector('audio') as HTMLAudioElement
-    statistics.updateFor(winner)
-    if (winner === 'player') {
-      winner_statement.innerText = 'Player Won'
-      winner_statement.classList.add('playerWin')
-      gameFinished = true
-      console.log('player win')
-      audio.pause()
-      endMusic = new Audio(winAudio)
-      endMusic.play()
-    } else if (winner === 'computer') {
-      winner_statement.innerText = 'Computer Won'
-      winner_statement.classList.add('computerWin')
-      gameFinished = true
-      console.log('computer win')
-      audio.pause()
-      endMusic = new Audio(gameOverAudio)
-      endMusic.play()
-    } else if (winner === 'draw') {
-      winner_statement.innerText = 'Draw...'
-      winner_statement.classList.add('draw')
-      console.log('draw')
-      audio.pause()
-      endMusic = new Audio(gameOverAudio)
-      endMusic.play()
-    }
-
-    const playerStat1Element = document.getElementById(
-      'playerstat1',
-    ) as HTMLElement
-    playerStat1Element.innerText = `${statistics.totalPlayerWins}`
-    const computerStat1Element = document.getElementById(
-      'computerstat1',
-    ) as HTMLElement
-    computerStat1Element.innerText = `${statistics.totalComputerWins}`
-    const loss1Element = document.getElementById('loss1') as HTMLElement
-    loss1Element.innerText = `${statistics.totalComputerWins}`
-    const loss2Element = document.getElementById('loss2') as HTMLElement
-    loss2Element.innerText = `${statistics.totalPlayerWins}`
-    const draw1Element = document.getElementById('draw1') as HTMLElement
-    draw1Element.innerText = `${statistics.totalDraws}`
-    const draw2Element = document.getElementById('draw2') as HTMLElement
-    draw2Element.innerText = `${statistics.totalDraws}`
-
     if (winner !== 'none') {
+      const winnerStatementElement = document.getElementById(
+        'winner',
+      ) as HTMLElement
+      const audio = document.querySelector('audio') as HTMLAudioElement
+      View.renderWinnerStatementFor(winner, winnerStatementElement)
+      statistics.updateFor(winner)
+      gameFinished = true
+      console.log(`${winner} win`)
+      audio.pause()
+      endMusic = selectEndAudioBasedOn(winner)
+      endMusic.play()
+
+      const playerStat1Element = document.getElementById(
+        'playerstat1',
+      ) as HTMLElement
+      playerStat1Element.innerText = `${statistics.totalPlayerWins}`
+      const computerStat1Element = document.getElementById(
+        'computerstat1',
+      ) as HTMLElement
+      computerStat1Element.innerText = `${statistics.totalComputerWins}`
+      const loss1Element = document.getElementById('loss1') as HTMLElement
+      loss1Element.innerText = `${statistics.totalComputerWins}`
+      const loss2Element = document.getElementById('loss2') as HTMLElement
+      loss2Element.innerText = `${statistics.totalPlayerWins}`
+      const draw1Element = document.getElementById('draw1') as HTMLElement
+      draw1Element.innerText = `${statistics.totalDraws}`
+      const draw2Element = document.getElementById('draw2') as HTMLElement
+      draw2Element.innerText = `${statistics.totalDraws}`
+
       //when the game ends, I create and add a button in the 'div-end-of-game' div
       const btn = document.createElement('button')
       btn.className = 'btn-sound'
