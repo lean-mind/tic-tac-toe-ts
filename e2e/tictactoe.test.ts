@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import {expect, test} from '@playwright/test'
 
 test.describe('In the tic tac toe game with EASY mode', () => {
   test('the player should win', async ({ page }) => {
@@ -29,5 +29,24 @@ test.describe('In the tic tac toe game with EASY mode', () => {
     const computerStats = await page.locator('id=computerstat1').innerText()
     expect(winnerMessage).toBe('Computer Won')
     expect(computerStats).toBe('1')
+  })
+  test('the board should be reset', async ({ page }) => {
+    await page.goto('./index')
+    await page.click('text=Start Game')
+    await page.selectOption('#ai_level', 'easy')
+
+    await page.click('#block_1')
+    await page.click('#block_2')
+    await page.click('#block_5')
+    await page.click('#block_7')
+
+    const winnerMessage = await page.locator('id=winner').innerText()
+    const computerStats = await page.locator('id=computerstat1').innerText()
+    expect(winnerMessage).toBe('Computer Won')
+    expect(computerStats).toBe('1')
+
+    await page.click('text=Reset Board')
+    const resetMessage = await page.locator('id=winner').innerText()
+    expect(resetMessage).toBe('')
   })
 })
